@@ -1,0 +1,6 @@
+<body>
+<p>sfgbdtrhnf</p>
+#set($name = "www")
+#set($url = "baidu")
+$name$url
+</body>
