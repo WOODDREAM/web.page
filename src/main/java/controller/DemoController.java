@@ -1,7 +1,7 @@
 package controller;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Date:2015-10-14
  * description：
  */
-@RestController
+@Controller
 @RequestMapping(value = "/web/page")
 public class DemoController extends ModelAndView{
     @RequestMapping(value = "/demo")

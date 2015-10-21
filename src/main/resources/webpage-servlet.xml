@@ -1,24 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-       <!--<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
-              <!--<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>-->
-              <!--<property name="prefix" value="/WEB-INF/jsp/"/>-->
-              <!--<property name="suffix" value=".jsp"/>-->
-       <!--</bean>-->
-       <!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
-              <!--<property name="prefix" value="/WEB-INF/jsp/"></property>-->
-              <!--<property name="suffix" value=".jsp"></property>-->
-       <!--</bean>-->
-       <!--velocity解析器替换原来的jsp-->
-       <bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver" >
-              <property name="cache" value="true"/>
+       <context:component-scan base-package="controller"/>
+       <!--没有的话http请求找不到mapping-->
+       <mvc:annotation-driven/>
+       <!--避免IE执行AJAX时，返回json出现文件下载-->
+       <bean id="mappingJackson2HttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+              <property name="supportedMediaTypes" >
+                     <list>
+                            <value>text/html;charset=UTF-8</value>
+                     </list>
+              </property>
+       </bean>
+       <!--启动springmvc的注解功能，完成请求和注解POJO映射-->
+       <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+              <property name="messageConverters">
+                     <list>
+                            <ref bean="mappingJackson2HttpMessageConverter"/>
+                     </list>
+              </property>
+
+       </bean>
+       <!--之前用的是VelocityLayoutViewResolver一直报错-->
+       <bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver" >
+              <!--<property name="cache" value="true"/>-->
               <!--<property name="layoutUrl" value="WEB-INF/velocity/marco/marco.vm"/>-->
-              <property name="contentType"><value>text/html;charset=UTF-8</value></property>
+              <!--<property name="contentType"><value>text/html;charset=UTF-8</value></property>-->
               <!--<property name="contentType" value="text/html;charset=UTF-8"/>-->
-              <property name="prefix" value=""/>
+              <!--不能指定value="/WEB-INF/velocity/"前缀，应该是velocityConfigurer里指定了resourceLoaderPath 去掉或者前缀值不指定-->
+              <!--<property name="prefix" value=""/>-->
               <property name="suffix" value=".vm"/>
        </bean>
        <bean id="velocityConfigurer" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
